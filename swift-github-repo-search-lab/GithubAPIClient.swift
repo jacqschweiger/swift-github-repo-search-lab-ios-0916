@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class GithubAPIClient {
     //talks to the API
@@ -72,25 +73,50 @@ class GithubAPIClient {
         let urlString = "\(githubAPIURL)/user/starred/\(fullName)?client_id=\(clientID)&client_secret=\(clientSecret)&access_token=\(personalAccessToken)"
         let url = URL(string: urlString)
         
-        guard let unwrappedURL = url else { return }
-        var request = URLRequest(url: unwrappedURL)
-        request.httpMethod = "PUT"
-        request.addValue("0", forHTTPHeaderField: "Content-Length")
-        let session = URLSession.shared
         
-        let task = session.dataTask(with: request) { (data, response, error) in
-            let httpResponse = response as! HTTPURLResponse
-            let statusCode = httpResponse.statusCode
-            print("Status code is \(statusCode)")
+        Alamofire.request(url!, method: .put).responseJSON { response in
             
-            if statusCode == 204 {
-                completion(true)
-            } else if statusCode == 404 {
-                completion(false)
+            print("alamofire running")
+            
+            if let JSON = response.result.value {
+                
+                let statusCode = response.response?.statusCode
+                
+                if statusCode == 204 {
+                    completion(true)
+                } else if statusCode == 404 {
+                    completion(false)
+                }
+                
             }
+            
         }
-        task.resume()
     }
+    
+    
+    
+    //        let urlString = "\(githubAPIURL)/user/starred/\(fullName)?client_id=\(clientID)&client_secret=\(clientSecret)&access_token=\(personalAccessToken)"
+    //        let url = URL(string: urlString)
+    //
+    //        guard let unwrappedURL = url else { return }
+    //        var request = URLRequest(url: unwrappedURL)
+    //        request.httpMethod = "PUT"
+    //        request.addValue("0", forHTTPHeaderField: "Content-Length")
+    //        let session = URLSession.shared
+    //
+    //        let task = session.dataTask(with: request) { (data, response, error) in
+    //            let httpResponse = response as! HTTPURLResponse
+    //            let statusCode = httpResponse.statusCode
+    //            print("Status code is \(statusCode)")
+    //
+    //            if statusCode == 204 {
+    //                completion(true)
+    //            } else if statusCode == 404 {
+    //                completion(false)
+    //            }
+    //        }
+    //        task.resume()
+    //    }
     
     
     
@@ -100,20 +126,47 @@ class GithubAPIClient {
         let urlString = "\(githubAPIURL)/user/starred/\(fullName)?client_id=\(clientID)&client_secret=\(clientSecret)&access_token=\(personalAccessToken)"
         let url = URL(string: urlString)
         
-        guard let unwrappedURL = url else { return }
-        var request = URLRequest(url: unwrappedURL)
-        request.httpMethod = "DELETE"
-        request.addValue("0", forHTTPHeaderField: "Content-Length")
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
-            let httpresponse = response as! HTTPURLResponse
-            if httpresponse.statusCode == 204 {
-                completion(true)
-            } else if httpresponse.statusCode == 404 {
-                completion(false)
+        
+        Alamofire.request(url!, method: .delete).responseJSON { response in
+            
+            print("alamofire running")
+            
+            if let JSON = response.result.value {
+                
+                let statusCode = response.response?.statusCode
+                
+                if statusCode == 204 {
+                    completion(true)
+                } else if statusCode == 404 {
+                    completion(false)
+                }
+                
             }
+            
         }
-        task.resume()
+        
+        
+        
+        
+        
+        
+        //        let urlString = "\(githubAPIURL)/user/starred/\(fullName)?client_id=\(clientID)&client_secret=\(clientSecret)&access_token=\(personalAccessToken)"
+        //        let url = URL(string: urlString)
+        //
+        //        guard let unwrappedURL = url else { return }
+        //        var request = URLRequest(url: unwrappedURL)
+        //        request.httpMethod = "DELETE"
+        //        request.addValue("0", forHTTPHeaderField: "Content-Length")
+        //        let session = URLSession.shared
+        //        let task = session.dataTask(with: request) { (data, response, error) in
+        //            let httpresponse = response as! HTTPURLResponse
+        //            if httpresponse.statusCode == 204 {
+        //                completion(true)
+        //            } else if httpresponse.statusCode == 404 {
+        //                completion(false)
+        //            }
+        //        }
+        //        task.resume()
         
     }
     
@@ -140,6 +193,5 @@ class GithubAPIClient {
     }
     
 }
-
 
 
